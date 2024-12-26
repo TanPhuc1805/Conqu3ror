@@ -44,71 +44,24 @@ public class ShapesManager : Singleton<ShapesManager>
     }
 
     // Use this for initialization
-    override public void Start()
-    {
-        InitializeTypesOnPrefabShapesAndBonuses();
-
-        InitializeCandyAndSpawnPositions();
-
-        StartCheckForPotentialMatches();
-
-        //InitMyCharacter();
-        playerCharacter = new CharacterInCombat
+        override public void Start()
         {
-            MaxHealth = 1000,
-            CurrentHealth = 100,
-            BaseAttack = 10,
-            CurrentAttack = 10,
-            MaxEnergy = 300,
-            CurrentEnergy = 300,
-            CurrentTime = 45,
-            MaxTime = 90,
-            Gold = 0,
-            Experience = 0
-        };
+            GameplayUIController.Ins.gameplayuipanel.SetActive(true);
 
-        playerCharacter.Skills = MinervaSkills.GetSkills();
+            InitializeTypesOnPrefabShapesAndBonuses();
 
-        if (GameplayUIController.Ins)
-        {
-            GameplayUIController.Ins.UpdateHealth(isMyTurn, playerCharacter.CurrentHealth, playerCharacter.MaxHealth);
-            GameplayUIController.Ins.UpdateEnergy(isMyTurn, playerCharacter.CurrentEnergy, playerCharacter.MaxEnergy);
-            GameplayUIController.Ins.UpdateTime(isMyTurn, playerCharacter.CurrentTime, playerCharacter.MaxTime);
-            GameplayUIController.Ins.UpdateAttack(true, playerCharacter.CurrentAttack);
-            GameplayUIController.Ins.UpdateCharacter(true, Resources.Load<Sprite>("Character/Minerva/Minerva"));
-            GameplayUIController.Ins.UpdateSkills(true, playerCharacter.Skills[0].Icon, playerCharacter.Skills[1].Icon, playerCharacter.Skills[2].Icon);
-        }
+            InitializeCandyAndSpawnPositions();
 
-        enemyCharacter = new CharacterInCombat
-        {
-            MaxHealth = 1200,
-            CurrentHealth = 100,
-            BaseAttack = 5,
-            CurrentAttack = 12,
-            MaxEnergy = 300,
-            CurrentEnergy = 0,
-            CurrentTime = 90,
-            MaxTime = 90,
-            Gold = 0,
-            Experience = 0
-        };
+            StartCheckForPotentialMatches();
 
-        enemyCharacter.Skills = MariusSkills.GetSkills();
-        if (GameplayUIController.Ins)
-        {
-            GameplayUIController.Ins.UpdateHealth(!isMyTurn, enemyCharacter.CurrentHealth, enemyCharacter.MaxHealth);
-            GameplayUIController.Ins.UpdateEnergy(!isMyTurn, enemyCharacter.CurrentEnergy, enemyCharacter.MaxEnergy);
-            GameplayUIController.Ins.UpdateTime(!isMyTurn, enemyCharacter.CurrentTime, enemyCharacter.MaxTime);
-            GameplayUIController.Ins.UpdateAttack(false, enemyCharacter.CurrentAttack);
-            GameplayUIController.Ins.UpdateCharacter(false, Resources.Load<Sprite>("Character/Marius/Marius"));
-            GameplayUIController.Ins.UpdateSkills(false, enemyCharacter.Skills[0].Icon, enemyCharacter.Skills[1].Icon, enemyCharacter.Skills[2].Icon);
-        }
+            InitMyCharacter();
+            InitEnemyCharacter();
 
-        if (TurnCounterUI.Ins)
-            TurnCounterUI.Ins.UpdateTurnCounter(isMyTurn, turnCount);
+            if (TurnCounterUI.Ins)
+                TurnCounterUI.Ins.UpdateTurnCounter(isMyTurn, turnCount);
 
-        AIController.Ins.character = enemyCharacter;
-        StartCountdown(isMyTurn);
+            AIController.Ins.character = enemyCharacter;
+            StartCountdown(isMyTurn);
     }
 
     private void InitMyCharacter()
@@ -183,7 +136,52 @@ public class ShapesManager : Singleton<ShapesManager>
         }
 
     }
+    public void InitEnemyCharacter()
+    {
+        GameDataManager gameData = GameDataManager.Ins;
+        if(gameData)
+        enemyCharacter = new CharacterInCombat
+        {
+            MaxHealth = gameData.GetPoinData().EnemyHealth,
+            CurrentHealth = gameData.GetPoinData().EnemyHealth,
+            BaseAttack = gameData.GetPoinData().EnemyAttack,
+            CurrentAttack = gameData.GetPoinData().EnemyAttack,
+            MaxEnergy = 300,
+            CurrentEnergy = 0,
+            CurrentTime = 90,
+            MaxTime = 90,
+            Gold = 0,
+            Experience = 0
+        };
+        if(gameData.GetPoinData().skillIndex == 0)
+        {
+            enemyCharacter.Skills = MinervaSkills.GetSkills();
+        }
+        else if (gameData.GetPoinData().skillIndex == 1)
+        {
+            enemyCharacter.Skills = PhoenixSkills.GetSkills();
+        }
+        else if (gameData.GetPoinData().skillIndex == 2)
+        {
+            enemyCharacter.Skills = JasmineSkills.GetSkills();
+        }
+        else if (gameData.GetPoinData().skillIndex == 3)
+        {
+            enemyCharacter.Skills = MariusSkills.GetSkills();
+        }
 
+        
+        if (GameplayUIController.Ins)
+        {
+            GameplayUIController.Ins.UpdateHealth(false, enemyCharacter.CurrentHealth, enemyCharacter.MaxHealth);
+            GameplayUIController.Ins.UpdateEnergy(false, enemyCharacter.CurrentEnergy, enemyCharacter.MaxEnergy);
+            GameplayUIController.Ins.UpdateTime(false, enemyCharacter.CurrentTime, enemyCharacter.MaxTime);
+            GameplayUIController.Ins.UpdateAttack(false, enemyCharacter.CurrentAttack);
+            GameplayUIController.Ins.UpdateCharacter(false, gameData.GetPoinData().Image);
+            GameplayUIController.Ins.UpdateSkills(false, enemyCharacter.Skills[0].Icon, enemyCharacter.Skills[1].Icon, enemyCharacter.Skills[2].Icon);
+        }
+
+    }
     /// ////////////////////////////////////////////////////
     public void OnSkillButtonClicked(int skillIndex)
     {
@@ -637,7 +635,8 @@ public class ShapesManager : Singleton<ShapesManager>
             state = GameState.Animating;
             if (!isBoardLocked)
             {
-                AIController.Ins.ExecuteAIMove(AIController.Ins.aiDifficulty.ToString());
+                // AIController.Ins.ExecuteAIMove(AIController.Ins.aiDifficulty.ToString());
+                AIController.Ins.ExecuteAIMove(GameDataManager.Ins.GetPoinData().AIDifficulty);
             }
             return;
         }

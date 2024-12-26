@@ -9,8 +9,8 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Scenes/Shop and Inventory and Player.unity
-    guid: 373d2376b050f004395c9f09df682548
+    path: Assets/Scenes/Map.unity
+    guid: 2031c3a5a8714d848bd989b7240cba39
   - enabled: 1
     path: Assets/Scenes/Main Game.unity
     guid: bfdc8879bc0cfd245867e8790941daff

@@ -21,6 +21,7 @@ MonoBehaviour:
     EnemyAttack: 4
     EnemyLevel: 1
     skillIndex: 1
+    AIDifficulty: Easy
   - PointName: Red2
     status: 0
     Image: {fileID: 7723652632321733531, guid: 834f1e3ed8e00a642b6bf914c1b7c12d, type: 3}
@@ -29,3 +30,4 @@ MonoBehaviour:
     EnemyAttack: 6
     EnemyLevel: 1
     skillIndex: 3
+    AIDifficulty: Easy

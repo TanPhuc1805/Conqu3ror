@@ -34,6 +34,7 @@ public class DialogController : MonoBehaviour
 
     public Text convo1;
     public Text convo2;
+    public Button FightButton;
 
     public GameObject[] RedPoints;
     public PointInfosDatabase pointDB;
@@ -136,7 +137,8 @@ public class DialogController : MonoBehaviour
     }
     public void PlayGame()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        Debug.Log("PlayGame!");
+        SceneManager.LoadScene("Main Game");
     }
 
 }

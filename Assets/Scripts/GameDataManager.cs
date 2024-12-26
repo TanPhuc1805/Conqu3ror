@@ -5,7 +5,7 @@ using System.Linq;
 [System.Serializable]
 public class PlayerData
 {
-    public int coins = 20000;
+    public int coins = 0;
     public int HealthEnergy = 5;
     public int currentHealthEnergy = 5;
     public List<int> UnlockedCharactersIndexes = new List<int> { 0, 1 };
@@ -28,6 +28,10 @@ public class GameDataManager : Singleton<GameDataManager>
 		selectedCharacter = CharacterDatabaseManager.GetDatabase().GetCharacter(playerData.selectedCharacterIndex);
 	}
     //PointData
+    public PointInfo GetPoinData()
+    {
+        return EnemyInfo;
+    }
     public void SetPointData(PointInfo CurrentPointData)
     {
         EnemyInfo = CurrentPointData;
